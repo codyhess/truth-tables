@@ -12,16 +12,19 @@
   <link href="/site-base/favicon.ico"
         rel="icon"
         type="image/x-icon">
+  <meta name="viewport"
+        content="width=720">
 </head>
 <body>
   <h1>Truth Tables</h1>
-  <div id="table">
+<div id="table">
   <div class="column">
-    <p class="th">A</a>
+    <p class="th">A</p>
     <p>false</p>
     <p>false</p>
     <p>true</p>
     <p>true</p>
+    <p class="spacer">&nbsp;</p>
   </div>
   <div class="column">
     <p class="th">B</p>
@@ -29,21 +32,39 @@
     <p>true</p>
     <p>false</p>
     <p>true</p>
+    <p class="spacer">&nbsp;</p>
   </div>
   <div class="column" id="not">
-    <p class="th">&nbsp;</p>
+    <p class="th">!A</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
+    <p class="spacer">&nbsp;</p>
   </div>
   <div class="column" id="combine">
-    <p class="th">&nbsp;</p>
+    <p class="th">!A || B</p>
+    <p>
+&nbsp;
+    </p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
-    <p>&nbsp;</p>
+    <p class="th">submit</p>
   </div>
-  </table>
+</div>
+<div id="table">
+  <div class="column">
+    <p class="spacer">&nbsp;</p>
+  </div>
+  <div class="column">
+    <p class="spacer">&nbsp;</p>
+  </div>
+  <div class="column" id="not">
+    <p class="spacer">&nbsp;</p>
+  </div>
+  <div class="column" id="combine">
+  </div>
+</div>
 </body>
 </html>

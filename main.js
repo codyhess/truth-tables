@@ -1,3 +1,4 @@
+/*
 let notDiv = undefined;
 let combineDiv = undefined;
 
@@ -40,3 +41,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   })();
 });
+*/

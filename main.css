@@ -8,6 +8,7 @@
   width: 5em;
 }
 /* END inline-block hack */
+
 .column {
   font-size: 32px;
   letter-spacing: 2px;
@@ -21,12 +22,18 @@ h1,
 p {
   padding: 0.25em 0;
 }
+
+/* START pretty borders */
 p {
   border-left: 1px solid black;
   border-bottom: 1px solid black;
   border-radius: 5px;
 }
-.column:last-child {
+.column:last-child p {
   border-right: 1px solid black;
   border-radius: 5px;
+}
+/* END pretty borders */
+.spacer {
+  border: none;
 }
