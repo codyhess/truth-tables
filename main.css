@@ -1,0 +1,34 @@
+* {
+  /* let's get consistent */
+  padding: 0;
+  margin: 0;
+}
+body {
+  /* single column */
+  font-size: 32px;
+  width: 30em;
+  margin: 0 auto;
+
+  /* style */
+  font-family: sans-serif;
+  text-align: center;
+  background-color: silver;
+}
+#table {
+  font-size: 0;
+}
+.column {
+  font-size: 32px;
+  font-family: monospace;
+  display: inline-block;
+  width: 5em;
+}
+.th {
+  background-color: black;
+  color: silver;
+}
+
+h1,
+p {
+  padding: 0.25em 0;
+}
