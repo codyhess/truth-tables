@@ -34,13 +34,20 @@ listen('DOMContentLoaded', function() {
     el.innerText = a + ' ' + op + ' ' + b;
   })(cols[1].children[0]);
 
-  listen('touchend', (event) => {
-    let t = event.target;
-    if (!(t.dataset.type === 'toggle')) { return; }
-    if (t.innerText !== 'true') {
-      t.innerText = 'true';
-    } else {
-      t.innerText = 'false';
-    }
-  });
+  listen('touchend', onTouchEndOrMouseUp);
+  listen('mouseup', onTouchEndOrMouseUp);
 });
+
+function onTouchEndOrMouseUp(event) {
+  event.preventDefault();
+  if (!(event.target.dataset.type === 'toggle')) return;
+  toggleCell(event.target);
+}
+
+function toggleCell(c) {
+  if (c.innerText !== 'true') {
+    c.innerText = 'true';
+  } else {
+    c.innerText = 'false';
+  }
+}
