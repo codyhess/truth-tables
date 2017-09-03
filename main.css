@@ -1,3 +1,7 @@
+body {
+  background-color: goldenrod;
+  color: black;
+}
 /* START inline-block hack */
 #table {
   font-size: 0;
@@ -10,12 +14,17 @@
 /* END inline-block hack */
 
 .column {
-  font-size: 32px;
+  font-size: 30px;
   letter-spacing: 2px;
 }
 .th {
   background-color: black;
-  color: silver;
+  color: goldenrod;
+}
+.submit {
+  right: 0;
+  background-color: black;
+  color: goldenrod;
 }
 
 h1,
@@ -29,7 +38,8 @@ p {
   border-bottom: 1px solid black;
   border-radius: 5px;
 }
-.column:last-child p {
+.column:last-child p,
+.column:nth-child(4) p {
   border-right: 1px solid black;
   border-radius: 5px;
 }
