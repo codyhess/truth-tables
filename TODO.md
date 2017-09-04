@@ -1,8 +1,8 @@
 # ToDo
-- multiple correct tables escalates difficulty
-- click/tap submit checks table for truth
-- on submit incorrect cells are highlighted
+- white blue color scheme
+- difficulty escalates
+- submit button checks answers
+  * submit highlights incorrect cells
 
-# Done
-- lots of stuff
-- more stuff
+* generate random formula
+  * printed in table headers
