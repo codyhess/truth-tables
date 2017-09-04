@@ -47,3 +47,6 @@ p {
 .spacer {
   border: none;
 }
+.wrong {
+  background-color: orange;
+}
