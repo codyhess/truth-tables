@@ -1,119 +1,123 @@
-let cols = c = [];
-let formula = f = [];
-f.push(Math.random() < .5 ? false : true);
-f.push(Math.random() < .5 ? false : true)
-f.push(f[0] ? false : true);
+(function(exports) {
+  // the old stuff
+  let cols = c = [];
+  let formula = f = [];
+  f.push(Math.random() < .5 ? false : true);
+  f.push(Math.random() < .5 ? false : true)
+  f.push(f[0] ? false : true);
 
-function listen(event, cb) {
-  return document.addEventListener(event, cb);
-}
-function getID(el) {
-  return document.getElementById(el);
-}
-function flip() {
-  return Math.random() < .5 ? true : false;
-}
+  // CONVENIENCE FUNCTIONS
+  function listen(event, cb) {
+    return document.addEventListener(event, cb); }
+  function getID(el) {
+    return document.getElementById(el); }
+  function flip() {
+    return Math.random() < .5 ? true : false; }
 
-listen('DOMContentLoaded', function() {
-  console.log('hello truth.js');
-
-  let not = f[0] ? 'A' : 'B';
-  let op  = f[1] ? '&&' : '||';
-
-  cols[0] = getID('not');
-  cols[0].n1 = getID('n1');
-  cols[0].n2 = getID('n2');
-  cols[0].n3 = getID('n3');
-  cols[0].n4 = getID('n4');
-
-  cols[1] = getID('combine');
-  cols[1].f1 = getID('f1');
-  cols[1].f2 = getID('f2');
-  cols[1].f3 = getID('f3');
-  cols[1].f4 = getID('f4');
-  //cols[2] = getID('hellmode');
-
-  // get random headers
-  ((el, str) => {
-    el.innerText = str;
-  })(cols[0].children[0], '!' + not);
-
-  ((el) => {
-    var a = not === 'A' ? '!A' : 'A';
-    var b = not === 'B' ? '!B' : 'B';
-    el.innerText = a + ' ' + op + ' ' + b;
-  })(cols[1].children[0]);
-
-  listen('touchend', onTouchEndOrMouseUp);
-  listen('mouseup', onTouchEndOrMouseUp);
-});
-
-function onTouchEndOrMouseUp(event) {
-  event.preventDefault();
-  if (event.target.id === 'submit') onSubmit();
-  if (!(event.target.dataset.type === 'toggle')) return;
-  toggleCell(event.target);
-}
-function toggleCell(c) {
-  if (c.innerText !== 'true') {
-    c.innerText = 'true';
-  } else {
-    c.innerText = 'false';
-} }
-function onSubmit() {
-  /* remove the wrongness */
-  for (let i=0; i<cols[0].children.length; i++) {
-    cols[0].children[i].classList.remove('wrong');
+  // STATE VARIABLES
+  let x = exports;
+  x.seeds = {
+    ff: { a: false, b: false },
+    ft: { a: false, b: true },
+    tf: { a: true, b: false },
+    tt: { a: true, b: true }
   }
-  for (let i=0; i<cols[1].children.length; i++) {
-    cols[1].children[i].classList.remove('wrong');
+  x.formula = {
+    b1: 'A',
+    b2: 'B',
+    b3: undefined,
+    op1: undefined,
+    op2: undefined,
+    n1: undefined,
+    n2: undefined,
+    easy: [],
+    medium: [],
+    hard: [],
+    not: [],
+    refresh: () => {
+      x.formula.b3  = Math.random() >.5 ? 'A'  : 'B';
+      x.formula.op1 = Math.random() >.5 ? '&&' : '||';
+      x.formula.op2 = Math.random() >.5 ? '&&' : '||';
+      x.formula.n1  = Math.random() >.5 ? 'A'  : 'B';
+      x.formula.n2  = Math.random() >.5 ? true : false;
+      x.formula.easy = [
+        x.formula.b1,
+        x.formula.op1,
+        x.formula.b2];
+      x.formula.medium = [
+        x.formula.b1,
+        x.formula.op1,
+        x.formula.b2,
+        x.formula.n1];
+      x.formula.hard = [
+        x.formula.b1,
+        x.formula.op1,
+        x.formula.b2,
+        x.formula.n1,
+        x.formula.op2,
+        x.formula.n2,
+        x.formula.b3];
+      x.formula.not = [
+        x.formula.n1];
+      return x.formula;
+  } };
+  x.cells = [
+    [x.seeds.ff, 'e1', undefined, x.formula.easy],
+    [x.seeds.ff, 'n1', undefined, x.formula.not],
+    [x.seeds.ff, 'm1', undefined, x.formula.medium],
+    [x.seeds.ff, 'h1', undefined, x.formula.hard],
+    [x.seeds.ft, 'e2', undefined, x.formula.easy],
+    [x.seeds.ft, 'n2', undefined, x.formula.not],
+    [x.seeds.ft, 'm2', undefined, x.formula.medium],
+    [x.seeds.ft, 'h2', undefined, x.formula.hard],
+    [x.seeds.tf, 'e3', undefined, x.formula.easy],
+    [x.seeds.tf, 'n3', undefined, x.formula.not],
+    [x.seeds.tf, 'm3', undefined, x.formula.medium],
+    [x.seeds.tf, 'h3', undefined, x.formula.hard],
+    [x.seeds.tt, 'e4', undefined, x.formula.easy],
+    [x.seeds.tt, 'n4', undefined, x.formula.not],
+    [x.seeds.tt, 'm4', undefined, x.formula.medium],
+    [x.seeds.tt, 'h4', undefined, x.formula.hard],
+  ]
+  x.streak = 0;
+  x.errors = 0;
+  x.isEasy = false;
+
+  listen('DOMContentLoaded', function() {
+    // FINISH INITIALIZING STATE
+    x.formula.refresh();
+    for (let i=0; i<x.cells.length; i++) {
+      x.cells[i][2] = getID(x.cells[i][1]); }
+
+    listen('touchend', x.onTouchEndOrMouseUp);
+    listen('mouseup', x.onTouchEndOrMouseUp);
+  });
+
+  // LISTENERS
+  x.onTouchEndOrMouseUp = function(event) {
+    event.preventDefault();
+    if (event.target.id === 'submit') x.submit();
+    if (!(event.target.dataset.type === 'toggle')) return;
+    x.toggleCell(event.target);
   }
-  /* boolean up the values */
-  let n1 = cols[0].n1.innerText;
-  if (n1 !== '--') n1 = (n1 === 'true');
-  let n2 = cols[0].n2.innerText;
-  if (n2 !== '--') n2 = (n2 === 'true');
-  let n3 = cols[0].n3.innerText;
-  if (n3 !== '--') n3 = (n3 === 'true');
-  let n4 = cols[0].n4.innerText;
-  if (n4 !== '--') n4 = (n4 === 'true');
-  let f1 = cols[1].f1.innerText;
-  if (f1 !== '--') f1 = (f1 === 'true');
-  let f2 = cols[1].f2.innerText;
-  if (f2 !== '--') f2 = (f2 === 'true');
-  let f3 = cols[1].f3.innerText;
-  if (f3 !== '--') f3 = (f3 === 'true');
-  let f4 = cols[1].f4.innerText;
-  if (f4 !== '--') f4 = (f4 === 'true');
-  /* check every cell individually */
-  if (n1 === '--'
-     || f[0] && n1 !== f[0]
-     || f[2] && n1 !== f[2]) {
-    cols[0].n1.classList.add('wrong');
-    cols[0].n1.innerText = '--';
+
+  // UTILITY
+  x.toggleCell = function(c) {
+    if (typeof(c) === 'string') c = getID(c);
+    c.innerText = c.innerText === 'true' ? 'false' : 'true';
+  };
+  x.submit = function() {
+    console.log('submit got called');
+    /* remove the wrongness */
+    for (let i=0; i<x.cells.length; i++) {
+      x.cells[i][2].classList.remove('wrong'); }
+    /* check every cell individually */
+    for (let i=0; i<x.cells.length; i++) {
+      console.log(i);
+      x.checkAndUpdate(x.cells[i]);
+  } };
+  x.checkAndUpdate = function(c) {
+    //console.log(c);
+    c[2].classList.add('wrong');
   }
-  if (n2 === '--'
-     || f[0] && n2 !== f[0]
-     || f[2] && n2 === f[2]) {
-    cols[0].n2.classList.add('wrong');
-    cols[0].n2.innerText = '--';
-  }
-  if (n3 === '--'
-     || f[0] && n3 === f[0]
-     || f[2] && n3 !== f[2]) {
-    cols[0].n3.classList.add('wrong');
-    cols[0].n3.innerText = '--';
-  }
-  if (n4 === '--'
-     || f[0] && n4 === f[0]
-     || f[2] && n4 === f[2]) {
-    cols[0].n4.classList.add('wrong');
-    cols[0].n4.innerText = '--';
-  }
-  if (f1 === '--'
-     || (f[0] && f1 !== f[0] || f[1])
-     || (f[2] && f1 === f[2] || f[1])) {
-    cols[1].f1.classList.add('wrong');
-    cols[1].f1.innerText = '--';
-  }
-}
+})(this.truth = {});
