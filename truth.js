@@ -82,6 +82,8 @@
   x.streak = 0;
   x.errors = 0;
   x.isEasy = false;
+  x.isMedium = true;
+  x.isHard = false;
   x.th = {};
   x.th.easy = null;
   x.th.medium = null;
@@ -111,6 +113,7 @@
     x.th.hard.innerText = h;
     x.th.not.innerText = n;
   }
+  x.body = null;
 
   listen('DOMContentLoaded', function() {
     // FINISH INITIALIZING STATE
@@ -144,10 +147,20 @@
       x.cells[i][2].classList.remove('wrong'); }
     /* check every cell individually */
     for (let i=0; i<x.cells.length; i++) {
-      console.log(i);
-      if (!x.checkAndUpdate(x.cells[i])) winner = false;
-  } };
+      if (!x.checkAndUpdate(x.cells[i])) {
+        winner = false;
+        console.log(x.cells[i] + ' is not a good cell');
+      }
+    }
+    console.log(winner);
+    if (winner) {
+      x.victoryFlash();
+    }
+  };
   x.checkAndUpdate = function(c) {
+    if (x.isEasy && !c[1][0] === 'e'
+       || x.isMedium && !(c[1][0] === 'm' || c[1][0] ==='n')
+       || x.isHard && !c[1][0] === 'h') return true;
     let val = c[2].innerText === 'true' ? true : false;
     let a = c[0][0] === 't' ? true : false;
     let b = c[0][1] === 't' ? true : false;
@@ -155,29 +168,50 @@
     function badCell(el) {
       el.innerText = '--';
       el.classList.add('wrong');
-      return false;
     }
     if (c[2].innerText === '--') {
-      return badCell(c[2]);
-    } else if ([1][0] === 'e') {
+      badCell(c[2]); return false;
+    } else if (c[1][0] === 'e' && x.isEasy) {
       f = (c[0][0] + x.formula.op1 + c[0][1]);
-      if (eval(f) !== val) return badCell(c[2]);
-    } else if (c[1][0] === 'n') {
+      if (eval(f) !== val) { badCell(c[2]); return false; }
+    } else if (c[1][0] === 'n' && x.isMedium) {
       f = '!' + (x.formula.n1 === 'A' ? a : b);
-      if (eval(f) !== val) return badCell(c[2]);
-    } else if (c[1][0] === 'm') {
+      if (eval(f) !== val) { badCell(c[2]); return false; }
+    } else if (c[1][0] === 'm' && x.isMedium) {
       a = (x.formula.n1 === 'A' ? '!' : '') + a;
       b = (x.formula.n1 === 'B' ? '!' : '') + b;
       f = a + x.formula.op1 + b;
-      if (eval(f) !== val) return badCell(c[2]);
-    } else if (c[1][0] === 'h') {
+      if (eval(f) !== val) { badCell(c[2]); return false; }
+    } else if (c[1][0] === 'h' && x.isHard) {
       a = (x.formula.n1 === 'A' ? '!' : '') + a;
       b = (x.formula.n1 === 'B' ? '!' : '') + b;
       f = a + x.formula.op1 + b + x.formula.op2;
       f += (x.formula.n2 ? '!' : '');
       f += (x.formula.b3 === 'A' ? a : b);
-      if (eval(f) !== val) return badCell(c[2]);
+      if (eval(f) !== val) { badCell(c[2]); return false; }
     } else { console.log('checker busted for ' + c); }
     return true;
+  }
+  x.victoryFlash = function() {
+    let count = 0;
+    let body = document.body;
+    let foo = document.getElementsByTagName('p');
+    let t = window.setInterval(() => {
+      if (count % 2 === 0) {
+        body.style.backgroundColor = 'darkblue';
+        body.style.color = 'lightblue';
+        for (let i=0; i<foo.length; i++) {
+          foo[i].style.borderColor = 'lightblue';
+        }
+      } else {
+        body.style.backgroundColor = 'lightblue';
+        body.style.color = 'darkblue';
+        for (let i=0; i<foo.length; i++) {
+          foo[i].style.borderColor = 'darkblue';
+        }
+      }
+      if (count > 4) window.clearInterval(t);
+      count += 1;
+    }, 100);
   }
 })(this.truth = {});
