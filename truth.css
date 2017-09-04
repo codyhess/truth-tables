@@ -1,6 +1,6 @@
 body {
-  background-color: goldenrod;
-  color: black;
+  background-color: lightblue;
+  color: darkblue;
 }
 /* START inline-block hack */
 #table {
@@ -18,13 +18,13 @@ body {
   letter-spacing: 2px;
 }
 .th {
-  background-color: black;
-  color: goldenrod;
+  background-color: darkblue;
+  color: lightblue;
 }
 .submit {
   right: 0;
-  background-color: black;
-  color: goldenrod;
+  background-color: darkblue;
+  color: lightblue;
 }
 
 h1,
@@ -34,14 +34,14 @@ p {
 
 /* START pretty borders */
 p {
-  border-left: 1px solid black;
-  border-bottom: 1px solid black;
+  border-left: 1px solid darkblue;
+  border-bottom: 1px solid darkblue;
   border-radius: 5px;
 }
 .column:last-child p,
 .column:nth-child(3),
 .column:nth-child(5) p {
-  border-right: 1px solid black;
+  border-right: 1px solid darkblue;
   border-radius: 5px;
 }
 /* END pretty borders */
@@ -53,5 +53,5 @@ p {
   border: none;
 }
 .wrong {
-  background-color: orange;
+  background-color: lightblue;
 }
