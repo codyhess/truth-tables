@@ -7,16 +7,15 @@ body {
   font-size: 0;
   letter-spacing: 0;
 }
-.column {
+.column,
+.column-double {
   display: inline-block;
-  width: 5em;
-}
-/* END inline-block hack */
-
-.column {
   font-size: 30px;
   letter-spacing: 2px;
 }
+.column { width: 5em; }
+.column-double { width: 10em; }
+/* END inline-block hack */
 .th {
   background-color: darkblue;
   color: lightblue;
@@ -25,6 +24,12 @@ body {
   right: 0;
   background-color: darkblue;
   color: lightblue;
+  width: 5em;
+  border: 0 !important;
+}
+.shove {
+  position: relative;
+  left: 5em;
 }
 
 h1,
@@ -38,15 +43,14 @@ p {
   border-bottom: 1px solid darkblue;
   border-radius: 5px;
 }
-.column:last-child p,
-.column:nth-child(3),
+.column-double p,
 .column:nth-child(5) p {
   border-right: 1px solid darkblue;
   border-radius: 5px;
 }
 /* END pretty borders */
 .column:last-child p,
-.column:nth-child(3) {
+.column:nth-child(3) p {
   width: 10em;
 }
 .spacer {
@@ -54,4 +58,7 @@ p {
 }
 .wrong {
   background-color: lightblue;
+}
+#aS {
+  width: 10em;
 }

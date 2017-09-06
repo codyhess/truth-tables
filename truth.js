@@ -16,12 +16,6 @@
 
   // STATE VARIABLES
   let x = exports;
-  x.seeds = {
-    ff: { a: false, b: false },
-    ft: { a: false, b: true },
-    tf: { a: true, b: false },
-    tt: { a: true, b: true }
-  }
   x.formula = {
     b1: 'A',
     b2: 'B',
@@ -78,12 +72,15 @@
     ['tt', 'n4', undefined],
     ['tt', 'm4', undefined],
     ['tt', 'h4', undefined],
-  ]
+  ];
+  x.seedCells = [
+    'a1', 'a2', 'a3', 'a4',
+    'b1', 'b2', 'b3', 'b4',
+  ];
+  x.scoreCell = 'aS';
   x.streak = 0;
   x.errors = 0;
-  x.isEasy = false;
-  x.isMedium = true;
-  x.isHard = false;
+  x.level = 0;
   x.th = {};
   x.th.easy = null;
   x.th.medium = null;
@@ -104,8 +101,8 @@
     let h = (x.formula.n1 === 'A' ? '!' : '')
             + 'A ' + x.formula.op1 + ' '
             + (x.formula.n1 === 'B' ? '!' : '')
-            + 'B' + x.formula.op2
-            + (x.formula.n2 ? '!' : '')
+            + 'B ' + x.formula.op2
+            + (x.formula.n2 ? ' !' : ' ')
             + x.formula.b3;
     let n = '!' + x.formula.n1;
     x.th.easy.innerText = e;
@@ -120,6 +117,8 @@
     x.formula.refresh();
     x.th.bind();
     x.th.write();
+    x.scoreCell = getID(x.scoreCell);
+    x.levelUp();
     for (let i=0; i<x.cells.length; i++) {
       x.cells[i][2] = getID(x.cells[i][1]); }
 
@@ -130,7 +129,7 @@
   // LISTENERS
   x.onTouchEndOrMouseUp = function(event) {
     event.preventDefault();
-    if (event.target.id === 'submit') x.submit();
+    if (event.target.dataset.type === 'submit') x.submit();
     if (!(event.target.dataset.type === 'toggle')) return;
     x.toggleCell(event.target);
   }
@@ -152,15 +151,18 @@
         console.log(x.cells[i] + ' is not a good cell');
       }
     }
-    console.log(winner);
     if (winner) {
       x.victoryFlash();
+      setTimeout(x.levelUp, 600);
+      setTimeout(x.resetCells, 600);
     }
   };
   x.checkAndUpdate = function(c) {
-    if (x.isEasy && !c[1][0] === 'e'
-       || x.isMedium && !(c[1][0] === 'm' || c[1][0] ==='n')
-       || x.isHard && !c[1][0] === 'h') return true;
+    if (x.level >1 && c[1][0] === 'e') return true;
+    if ((x.level<2 || x.level>3)
+      && (c[1][0] === 'n' || c[1][0] === 'm')) {
+      return true; }
+    if (x.level <4 && c[1][0] === 'h') return true;
     let val = c[2].innerText === 'true' ? true : false;
     let a = c[0][0] === 't' ? true : false;
     let b = c[0][1] === 't' ? true : false;
@@ -171,23 +173,26 @@
     }
     if (c[2].innerText === '--') {
       badCell(c[2]); return false;
-    } else if (c[1][0] === 'e' && x.isEasy) {
-      f = (c[0][0] + x.formula.op1 + c[0][1]);
+    } else if (c[1][0] === 'e') {
+      f = (a + x.formula.op1 + b);
+      console.log(f);
       if (eval(f) !== val) { badCell(c[2]); return false; }
-    } else if (c[1][0] === 'n' && x.isMedium) {
+    } else if (c[1][0] === 'n') {
       f = '!' + (x.formula.n1 === 'A' ? a : b);
       if (eval(f) !== val) { badCell(c[2]); return false; }
-    } else if (c[1][0] === 'm' && x.isMedium) {
+    } else if (c[1][0] === 'm') {
       a = (x.formula.n1 === 'A' ? '!' : '') + a;
       b = (x.formula.n1 === 'B' ? '!' : '') + b;
       f = a + x.formula.op1 + b;
       if (eval(f) !== val) { badCell(c[2]); return false; }
-    } else if (c[1][0] === 'h' && x.isHard) {
-      a = (x.formula.n1 === 'A' ? '!' : '') + a;
-      b = (x.formula.n1 === 'B' ? '!' : '') + b;
-      f = a + x.formula.op1 + b + x.formula.op2;
+    } else if (c[1][0] === 'h') {
+      f += ((x.formula.n1 === 'A' ? '!' : '') + a);
+      f += x.formula.op1;
+      f += ((x.formula.n1 === 'B' ? '!' : '') + b);
+      f += x.formula.op2;
       f += (x.formula.n2 ? '!' : '');
       f += (x.formula.b3 === 'A' ? a : b);
+      console.log(f);
       if (eval(f) !== val) { badCell(c[2]); return false; }
     } else { console.log('checker busted for ' + c); }
     return true;
@@ -213,5 +218,41 @@
       if (count > 4) window.clearInterval(t);
       count += 1;
     }, 100);
+  }
+  x.levelUp = function() {
+    let e = getID('easy');
+    let n = getID('not');
+    let m = getID('medium');
+    let h = getID('hard');
+    x.level += 1;
+
+    if (x.level > 6) {
+      let t = getID('table');
+      let w = document.createElement('h1');
+      w.style.marginTop = '1em';
+      w.innerText = "YOU WIN!";
+      x.victoryFlash();
+      setTimeout(() => {
+        t.replaceWith(w);
+      }, 600);
+    } else {
+      x.scoreCell.innerText = 'Level ' + x.level;
+    }
+    if (x.level === 2) {
+      e.style.display = 'none'
+      n.style.display = 'inline-block';
+      m.style.display = 'inline-block';
+    }
+    if (x.level === 4) {
+      n.style.display = 'none';
+      m.style.display = 'none';
+      h.style.display = 'inline-block';
+    }
+    x.formula.refresh();
+    x.th.write();
+  }
+  x.resetCells = function() {
+    for (let i=0; i<x.cells.length; i++) {
+      x.cells[i][2].innerText = '--'; }
   }
 })(this.truth = {});

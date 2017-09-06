@@ -22,32 +22,33 @@
 <div id="table">
   <div class="column">
     <p class="th">A</p>
-    <p>false</p>
-    <p>false</p>
-    <p>true</p>
-    <p>true</p>
-    <p class="spacer">&nbsp;</p>
+    <p id="a1">false</p>
+    <p id="a2">false</p>
+    <p id="a3">true</p>
+    <p id="a4">true</p>
+    <p id="aS" class="spacer">----------------</p>
   </div>
   <div class="column">
     <p class="th">B</p>
-    <p>false</p>
-    <p>true</p>
-    <p>false</p>
-    <p>true</p>
+    <p id="b1">false</p>
+    <p id="b2">true</p>
+    <p id="b3">false</p>
+    <p id="b4">true</p>
     <p class="spacer">&nbsp;</p>
   </div>
-  <div class="column"
-       id="easy"
-       style="display:none;">
+  <div class="column-double"
+       id="easy">
     <p id ="easyH" class="th">--</p>
     <p id="e1" data-type="toggle">--</p>
     <p id="e2" data-type="toggle">--</p>
     <p id="e3" data-type="toggle">--</p>
     <p id="e4" data-type="toggle">--</p>
-    <p id="eS" class="spacer">&nbsp;</p>
+    <p id="eS" class="submit shove"
+       data-type="submit">submit</p>
   </div>
   <div class="column"
-       id="not">
+       id="not"
+       style="display:none;">
     <p id="notH" class="th">--</p>
     <p id="n1" data-type="toggle">--</p>
     <p id="n2" data-type="toggle">--</p>
@@ -56,15 +57,16 @@
     <p id="nS" class="spacer">&nbsp;</p>
   </div>
   <div class="column"
-       id="medium">
+       id="medium"
+       style="display:none;">
     <p id="mediumH" class="th">--</p>
     <p id="m1" data-type="toggle">--</p>
     <p id="m2" data-type="toggle">--</p>
     <p id="m3" data-type="toggle">--</p>
     <p id="m4" data-type="toggle">--</p>
-    <p id="submit" class="submit">submit</p>
+    <p class="submit" data-type="submit">submit</p>
   </div>
-  <div class="column"
+  <div class="column-double"
        id="hard"
        style="display:none;">
     <p id="hardH" class="th">--</p>
@@ -72,7 +74,8 @@
     <p id="h2" data-type="toggle">--</p>
     <p id="h3" data-type="toggle">--</p>
     <p id="h4" data-type="toggle">--</p>
-    <p class="submit">submit</p>
+    <p class="submit shove"
+       data-type="submit">submit</p>
   </div>
 </div>
 </body>
